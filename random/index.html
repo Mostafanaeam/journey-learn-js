@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء ملفات الدروس</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .status {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 منشئ ملفات دورة JavaScript</h1>
+        <p>سيتم إنشاء 188 ملف درس مع التاسكات والمحتوى التعليمي</p>
+        
+        <button class="btn" onclick="createLessons()">🚀 إنشاء جميع الملفات</button>
+        <button class="btn" onclick="downloadAll()">📦 تحميل الملفات</button>
+        <button class="btn" onclick="clearAll()">🗑️ مسح الكل</button>
+        
+        <div id="status" class="status">
+            جاهز للإنشاء...
+        </div>
+        
+        <div id="fileList"></div>
+    </div>
+
+    <script>
+        // قائمة الدروس
+        const lessons = [
+            "1:Introduction And What Is JavaScript",
+            "2:How To Study The Course",
+            "3:Setting up environment and tools",
+            "4:Work with chrome developer tools",
+            "5:Where to put the code",
+            "6:Comments and bad practice",
+            "7:Output to screen",
+            "8:Console methods and styling and web API",
+            "9:What is ECMAScript",
+            "10:Data type and typeof operator",
+            "11:Variable introduction",
+            "12:Identifiers name convention & rules",
+            "13:Var, Let, Const compare",
+            "14:String syntax & Escape",
+            "15:Concatenation",
+            "16:Template Literals (Template Strings)",
+            "17:Variables & Concatenation challenge",
+            "18:Arithmetic operators",
+            "19:Unary plus and negation operators",
+            "20:Type coercion",
+            "21:Assignment operators",
+            "22:Operators challenge",
+            "23:Number",
+            "24:Number methods",
+            "25:Math object",
+            "26:Number challenge",
+            "27:String methods part 1",
+            "28:String methods part 2",
+            "29:String methods part 3",
+            "30:String challenge",
+            "31:Comparison operators",
+            "32:Logical operators",
+            "33:If conditions",
+            "34:Nested if conditions",
+            "35:Conditional Ternary operator",
+            "36:Nullish coalescing operator & Logical Operators",
+            "37:If conditions challenge",
+            "38:Switch statement",
+            "39:Switch & If conditions challenge",
+            "40:Array Big introduction",
+            "41:Using lenght with array",
+            "42:Add and remove array",
+            "43:Add and remove array",
+            "44:Sorting array",
+            "45:Slicing array",
+            "46:Joining array",
+            "47:Array challenge",
+            "48:Loop For and concept fo Loop",
+            "49:Looping on sequences",
+            "50:Nested Loop and Training",
+            "51:Loop control-Break, Continue, Label",
+            "52:Loop for-advanced example",
+            "53:Practice add products to page",
+            "54:Loop while",
+            "55:Loop do - while",
+            "56:Loop challenge",
+            "57:Function intro and basic usage",
+            "58:Function advanced examples",
+            "59:Function return statement & use cases",
+            "60:Function default parameters",
+            "61:Function rest parameters",
+            "62:Function Ultimate Practice",
+            "63:Random arguments Function challenge",
+            "64:Anonymous Function and practice",
+            "65:Return Nested Function",
+            "66:Arrow Function syntax",
+            "67:Scope - Globale and Local",
+            "68:Scope - Block",
+            "69:Scope - Lexical",
+            "70:Arrow Function challenge",
+            "71:Higher order Function map",
+            "72:Higher order Function map practice",
+            "73:Higher order Function fillter",
+            "74:Higher order Function fillter practice",
+            "75:Higher order Function reduce",
+            "76:Higher order Function reduce practice",
+            "77:ForEach and practice",
+            "78:Higher order Function challenge",
+            "79:Object introduction",
+            "80:Dot notation vs Bracket notation",
+            "81:Nested Object and advanced examples",
+            "82:Create object with new keyword",
+            "83:This keyword",
+            "84:Create object with Create method",
+            "85:Create object with assign method",
+            "86:What is DOM ? and select elements",
+            "87:Get, Set elements Content and attributes",
+            "88:Check attributes and examples",
+            "89:Create and append elements",
+            "90:Product with title & discription practice",
+            "91:Deal with childrens",
+            "92:DOM events",
+            "93:Validate form and prevent default",
+            "94:Event simulation click, focus, blur",
+            "95:Class list object and methods",
+            "96:CSS styling",
+            "97:Before, After, Prepend, Append, Remove",
+            "98:DOM traversing",
+            "99:DOM Cloning",
+            "100:Add EventListener",
+            "101:DOM challenge",
+            "102:What Is BOM",
+            "103:Alert, Confirm, Prompt",
+            "104:setTimeout and clearTimeout",
+            "105:setInterval and clearInterval",
+            "106:Window Location Object",
+            "107:Window Open And Close",
+            "108:Window History Object",
+            "109:Scroll, ScrollTo, ScrollBy, Focus, Print, Stop",
+            "110:Scroll To Top Using Y Practice",
+            "111:Local Storage",
+            "112:Local Storage Color Application Practice",
+            "113:Session Storage And Use Cases",
+            "114:BOM Challenge",
+            "115:Destructuring Arrays Part 1",
+            "116:Destructuring Arrays Part 2",
+            "117:Destructuring Arrays Part 3 - Swap Variables",
+            "118:Destructuring Objects Part 1",
+            "119:Destructuring Objects Part 2",
+            "120:Destructuring Function Parameters",
+            "121:Destructuring Mixed Content",
+            "122:Destructuring Challenge",
+            "123:Set Data Types And Methods",
+            "124:Set vs WeakSet And Garbage Collector",
+            "125:Map Data Type Vs Object",
+            "126:Map Methods",
+            "127:Map Vs WeakMap",
+            "128:Array.from Method",
+            "129:Array.copyWithin Method",
+            "130:Array.some Method",
+            "131:Array.every Method",
+            "132:Spread Syntax And Use Cases",
+            "133:Map And Set Challenge",
+            "134:Intro And What Is Regular Expression",
+            "135:Regular Expressions - Modifiers",
+            "136:Regular Expressions - Ranges Part 1",
+            "137:Regular Expressions - Ranges Part 2",
+            "138:Regular Expressions - Character Classes Part 1",
+            "139:Regular Expressions - Character Classes Part 2",
+            "140:Regular Expressions - Quantifiers Part 1",
+            "141:Regular Expressions - Quantifiers Part 2",
+            "142:Regular Expressions - Quantifiers Part 3",
+            "143:Regular Expressions - Replace With Pattern",
+            "144:Regular Expressions - Form Validation",
+            "145:Test Your Regular Expressions And Discussions",
+            "146:Regular Expressions - Challenge",
+            "147:OOP Introduction",
+            "148:Constructor Function Introduction",
+            "149:Constructor Function New Syntax",
+            "150:Deal With Properties And Methods",
+            "151:Update Properties And Built In Constructors",
+            "152:Class Static Properties And Methods",
+            "153:Class Inheritance",
+            "154:Class Encapsulation",
+            "155:Prototype Introduction",
+            "156:Add To Prototype Chain And Extend Constructors Features",
+            "157:Object Meta Data And Descriptor Part 1",
+            "158:Object Meta Data And Descriptor Part 2",
+            "159:Date And Time Introduction",
+            "160:Get Date And Time",
+            "161:Set Date And Time",
+            "162:Formatting Date And Time",
+            "163:Tracking Operations Time",
+            "164:Generator Function Introduction",
+            "165:Delegate Generator Function",
+            "166:Generate Infinite Numbers",
+            "167:Modules Import And Export",
+            "168:Named vs Default Export And Import All",
+            "169:What Is JSON",
+            "170:JSON Syntax And Compare With JS Object",
+            "171:What Is API",
+            "172:Parse And Stringify",
+            "173:Asynchronous vs Synchronous Programming",
+            "174:Call Stack And Web API",
+            "175:Event Loop And Callback Queue",
+            "176:What Is AJAX And Network Information",
+            "177:Request And Response From Real API",
+            "178:Loop On Data",
+            "179:Callback Hell Or Pyramid Of Doom",
+            "180:Promise Intro And Syntax",
+            "181:Promise - Then, Catch And Finally",
+            "182:Promise And XHR",
+            "183:Fetch API",
+            "184:Promise All And All Settled And Race",
+            "185:Async And Training",
+            "186:Await And Training",
+            "187:Try, Catch And Finally With Fetch",
+            "188:The End And Advices"
+        ];
+
+        let createdFiles = [];
+
+        function createLessons() {
+            const status = document.getElementById('status');
+            const fileList = document.getElementById('fileList');
+            createdFiles = [];
+            fileList.innerHTML = '';
+            
+            status.innerHTML = '🚀 جاري إنشاء الملفات...';
+            
+            let completed = 0;
+            lessons.forEach((lesson, index) => {
+                const [lessonNum, ...topicParts] = lesson.split(':');
+                const lessonTopic = topicParts.join(':');
+                
+                // إنشاء اسم الملف
+                const fileName = `lesson_${lessonNum}_${lessonTopic
+                    .toLowerCase()
+                    .replace(/ /g, '_')
+                    .replace(/[().]/g, '')
+                    .replace(/&/g, 'and')}.md`;
+                
+                // إنشاء المحتوى
+                const content = generateLessonContent(lessonNum, lessonTopic);
+                
+                // حفظ في Local Storage
+                localStorage.setItem(`lesson_${lessonNum}`, content);
+                createdFiles.push(fileName);
+                
+                completed++;
+                status.innerHTML = `✅ تم إنشاء ${completed} من ${lessons.length} درس`;
+            });
+            
+            status.innerHTML += '<br><br>🎉 تم إنشاء جميع الملفات بنجاح!';
+            displayFileList();
+        }
+
+        function generateLessonContent(lessonNum, lessonTopic) {
+            return `# 📚 الدرس رقم ${lessonNum}: ${lessonTopic}
+
+---
+
+## ⏱️ معلومات الدرس
+- **رقم الدرس:** ${lessonNum}
+- **الموضوع:** ${lessonTopic}  
+- **المستوى:** مبتدئ إلى متقدم
+- **المدة المقترحة:** 30-45 دقيقة
+
+---
+
+## 📖 محتوى الدرس
+
+### 🎯 الهدف من الدرس:
+في هذا الدرس ستتعلم المفاهيم الأساسية والمتقدمة للـ ${lessonTopic}.
+
+### 🔑 المفاهيم الأساسية:
+- شرح تفصيلي للمفهوم
+- أمثلة عملية
+- تطبيقات واقعية
+- أفضل الممارسات
+
+## 📝 التاسكات | التمارين
+
+### 🎯 التاسكات الأساسية:
+1. **📄 مراجعة الدرس:** راجع النقاط الرئيسية في الدرس
+2. **💻 تطبيق عملي:** طبق ما تعلمته في مثال بسيط
+3. **🔍 بحث إضافي:** ابحث عن مثال أو مرجع إضافي
+
+### 🎨 التاسكات المتقدمة:
+- **📖 دراسة أعمق:** ابحث عن مثال شامل
+- **🧪 تجربة مبدعة:** طبق المفهوم في مشروع صغير
+- **💡 مشاركة المعرفة:** اشرح الدرس لشخص آخر
+
+### 🚀 التاسكات الإضافية:
+- **🔧 مشروع تطبيقي:** طبق المفهوم في مشروع حقيقي
+- **🔍 حل تحديات:** ابحث عن تحديات برمجية على الإنترنت
+- **📚 كتابة ملخص:** اكتب ملخص الدرس بكلماتك
+- **🎯 تحدي أسبوعي:** طبق 3 دروس من هذا الأسبوع
+
+### 🏆 التقييم الذاتي:
+- [ ] فهمت المفهوم الأساسي
+- [ ] تمكنت من تطبيقه عملياً
+- [ ] حللت التاسكات بدون مساعدة
+- [ ] استطعت شرحه لشخص آخر
+- [ ] طبقت المفهوم في مشروع
+
+---
+
+# 💡 About & Contact
+
+أنا **مصطفى عبد النعيم** — مؤسس **Code Journey**.  
+أعمل على **تمكين الشباب من دخول عالم البرمجة بخطوات عملية وواضحة**، من خلال محتوى، تدريب، وتوجيه مبني على التجربة الفعلية.
+
+### 📬 تقدر تتواصل معايا شخصيًا:
+- 💬 واتساب: [اضغط هنا](https://wa.me/201114938410)
+- 📧 الإيميل: [mnaeam10@gmail.com](mailto:mnaeam10@gmail.com)  
+- 🌐 [الموقع الرسمي](https://mostafa-naeam.vercel.app/)  
+- 💼 [LinkedIn](https://www.linkedin.com/in/mostafa-naeam/)
+
+## 💬 تواصل معنا
+- 💬 واتساب: [اضغط هنا](https://wa.me/201555303227)
+- 📩 البريد الرسمي: [codejourney02@gmail.com](mailto:codejourney02@gmail.com)  
+- 💼 [LinkedIn – Code Journey](https://www.linkedin.com/company/code-journey25/)  
+- 🌐 [Website – mostafa-naeam](https://mostafa-naeam.vercel.app/)
+
+---
+
+## ⚖️ License | الترخيص
+
+### MIT License (English)
+
+\`\`\`License
+MIT License
+
+Copyright (c) 2025 Mostafa Abd El-naeam
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+\`\`\`
+
+### رخصة MIT (بالعربية)
+
+\`\`\`License
+
+يُمنح الإذن مجانًا لأي شخص يحصل على نسخة من هذا البرنامج والوثائق المرتبطة به ("البرنامج") بالتعامل في البرنامج دون أي قيود، بما في ذلك على سبيل المثال لا الحصر، حقوق الاستخدام والنسخ والتعديل والدمج والنشر والتوزيع والترخيص من الباطن و/أو بيع نسخ من البرنامج، والسماح للأشخاص الذين يُقدَّم لهم البرنامج بالقيام بذلك، وذلك وفقًا للشروط التالية:
+
+يجب تضمين إشعار حقوق النشر وإشعار الإذن هذا في جميع نسخ البرنامج أو الأجزاء الجوهرية منه.
+
+يُقدَّم البرنامج "كما هو"، دون أي ضمان من أي نوع، سواء صريح أو ضمني، بما في ذلك على سبيل المثال لا الحصر، ضمانات قابلية التسويق أو الملاءمة لغرض معين أو عدم الانتهاك.  
+في أي حال من الأحوال لن يكون المؤلفون أو أصحاب حقوق النشر مسؤولين عن أي مطالبة أو أضرار أو مسؤولية أخرى، سواء في عقد أو فعل ضار أو غير ذلك، تنشأ عن أو تتعلق بالبرنامج أو باستخدامه أو التعاملات الأخرى فيه.
+
+\`\`\`
+
+⭐ **ابدأ رحلتك خطوة بخطوة — الكود اللي بتكتبه النهارده ممكن يكون أول لبنة في مستقبلك.**`;
+        }
+
+        function displayFileList() {
+            const fileList = document.getElementById('fileList');
+            const files = createdFiles;
+            
+            let html = '<h3>📁 الملفات المنشأة:</h3><div class="success">';
+            files.slice(0, 10).forEach(file => {
+                html += `✅ ${file}<br>`;
+            });
+            html += `... و ${files.length - 10} ملف آخر</div>`;
+            
+            fileList.innerHTML = html;
+        }
+
+        function downloadAll() {
+            if (createdFiles.length === 0) {
+                alert('يرجى إنشاء الملفات أولاً!');
+                return;
+            }
+
+            // إنشاء ملف مضغوط من جميع الملفات
+            let allContent = '';
+            createdFiles.forEach(fileName => {
+                const lessonNum = fileName.match(/lesson_(\d+)_/)[1];
+                const content = localStorage.getItem(`lesson_${lessonNum}`);
+                allContent += `---
+${content}
+`;
+            });
+
+            const blob = new Blob([allContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'js-course-lessons.md';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('🎉 تم تحميل الملف بنجاح!');
+        }
+
+        function clearAll() {
+            if (confirm('هل أنت متأكد من حذف جميع الملفات؟')) {
+                localStorage.clear();
+                createdFiles = [];
+                document.getElementById('fileList').innerHTML = '';
+                document.getElementById('status').innerHTML = 'تم مسح جميع الملفات';
+                alert('✅ تم مسح جميع الملفات');
+            }
+        }
+    </script>
+</body>
+</html>

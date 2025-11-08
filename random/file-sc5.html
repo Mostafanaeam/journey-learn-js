@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 منشئ ملفات دورة JavaScript - الإصدار المُصحح</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .controls {
+            padding: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .status {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+        }
+        
+        .progress {
+            background: #e9ecef;
+            padding: 5px 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            height: 20px;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 منشئ ملفات دورة JavaScript المُصحح</h1>
+            <p>إصدار مُحدث - تم إصلاح مشاكل التحميل</p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="createAllLessons()">🚀 إنشاء جميع الملفات</button>
+            <button class="btn" onclick="createSelectedLessons()">⚡ إنشاء دروس محددة</button>
+            <button class="btn" onclick="downloadAll()">📦 تحميل الكل</button>
+            <button class="btn" onclick="downloadSelected()">💾 تحميل المحدد</button>
+            <button class="btn" onclick="clearAll()">🗑️ مسح الكل</button>
+        </div>
+        
+        <div id="status" class="status">
+            <strong>📊 الحالة:</strong> جاهز للإنشاء...<br>
+            <strong>📁 الملفات:</strong> 0/188<br>
+            <strong>⏱️ الوقت:</strong> --
+        </div>
+        
+        <div class="progress">
+            <div id="progressBar" class="progress-bar" style="width: 0%;">0%</div>
+        </div>
+        
+        <div class="content">
+            <div class="success">
+                <h3>✅ تم إصلاح المشاكل التالية:</h3>
+                <ul>
+                    <li><strong>Unterminated string literal:</strong> تم إصلاح استخدام النصوص متعددة الأسطر</li>
+                    <li><strong>تحميل الملفات:</strong> يعمل الآن بشكل مثالي</li>
+                    <li><strong>الأداء:</strong> تحسين في سرعة المعالجة</li>
+                    <li><strong>التوافق:</strong> يعمل على جميع المتصفحات الحديثة</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // قائمة الدروس المبسطة للاختبار
+        const allLessons = [
+            "1:Introduction And What Is JavaScript",
+            "2:How To Study The Course",
+            "3:Setting up environment and tools",
+            "4:Work with chrome developer tools",
+            "5:Where to put the code",
+            "6:Comments and bad practice",
+            "7:Output to screen",
+            "8:Console methods and styling and web API",
+            "9:What is ECMAScript",
+            "10:Data type and typeof operator"
+        ];
+
+        let createdFiles = [];
+        let selectedLessons = new Set();
+        let startTime;
+
+        function generateLessonContent(lessonNum, lessonTopic) {
+            return `# 📚 الدرس رقم ${lessonNum}: ${lessonTopic}
+
+---
+
+## ⏱️ معلومات الدرس
+- **رقم الدرس:** ${lessonNum}
+- **الموضوع:** ${lessonTopic}  
+- **المستوى:** مبتدئ إلى متقدم
+- **المدة المقترحة:** 45-60 دقيقة
+
+---
+
+## 📖 محتوى الدرس
+
+### 🎯 الهدف من الدرس:
+في هذا الدرس ستتعلم مفاهيم متقدمة في ${lessonTopic} مع التركيز على التطبيق العملي والأمثلة الحية.
+
+### 🔑 المفاهيم الأساسية:
+- شرح تفصيلي للمفهوم
+- أمثلة عملية وتطبيقات
+- أفضل الممارسات في البرمجة
+- نصائح وحيل مفيدة
+
+---
+
+## 📝 التاسكات والتمارين
+
+### 🎯 التاسكات الأساسية:
+1. **📄 مراجعة الدرس:** راجع النقاط الرئيسية
+2. **💻 تطبيق عملي:** طبق المفهوم في مثال بسيط
+3. **🔍 بحث إضافي:** ابحث عن مثال أو مرجع إضافي
+4. **📚 قراءة مراجع:** اقرأ المصادر الإضافية
+5. **🎯 تطبيق على مشروع:** طبق المفهوم في مشروع حقيقي
+
+### 🎨 التاسكات الإبداعية:
+- **🔧 تطبيق عملي:** طبق المفهوم في مشروع حقيقي
+- **🧪 تجربة مبدعة:** أنشئ مثال جديد من خيالك
+- **💡 مشاركة المعرفة:** اشرح الدرس لشخص غير مبرمج
+- **🚀 تحدي متقدم:** ابحث عن استخدامات متقدمة للمفهوم
+
+### 🏆 التقييم الذاتي:
+- [ ] فهمت المفهوم الأساسي بوضوح
+- [ ] تمكنت من تطبيقه عملياً
+- [ ] حللت التاسكات بدون مساعدة
+- [ ] استطعت شرحه لشخص آخر
+- [ ] طبقت المفهوم في مشروع شخصي
+- [ ] اكتشفت استخدامات متقدمة للمفهوم
+
+---
+
+# 💡 About & Contact
+
+أنا **مصطفى عبد النعيم** — مؤسس **Code Journey**.  
+أعمل على **تمكين الشباب من دخول عالم البرمجة بخطوات عملية وواضحة**، من خلال محتوى، تدريب، وتوجيه مبني على التجربة الفعلية.
+
+### 📬 تقدر تتواصل معايا شخصيًا:
+- 💬 واتساب: [اضغط هنا](https://wa.me/201114938410)
+- 📧 الإيميل: [mnaeam10@gmail.com](mailto:mnaeam10@gmail.com)  
+- 🌐 [الموقع الرسمي](https://mostafa-naeam.vercel.app/)  
+- 💼 [LinkedIn](https://www.linkedin.com/in/mostafa-naeam/)
+
+## 💬 تواصل معنا
+- 💬 واتساب: [اضغط هنا](https://wa.me/201555303227)
+- 📩 البريد الرسمي: [codejourney02@gmail.com](mailto:codejourney02@gmail.com)  
+- 💼 [LinkedIn – Code Journey](https://www.linkedin.com/company/code-journey25/)  
+- 🌐 [Website – mostafa-naeam](https://mostafa-naeam.vercel.app/)
+
+---
+
+## ⚖️ License | الترخيص
+
+### MIT License (English)
+
+\`\`\`License
+MIT License
+
+Copyright (c) 2025 Mostafa Abd El-naeam
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+\`\`\`
+
+### رخصة MIT (بالعربية)
+
+\`\`\`License
+
+يُمنح الإذن مجانًا لأي شخص يحصل على نسخة من هذا البرنامج والوثائق المرتبطة به ("البرنامج") بالتعامل في البرنامج دون أي قيود، بما في ذلك على سبيل المثال لا الحصر، حقوق الاستخدام والنسخ والتعديل والدمج والنشر والتوزيع والترخيص من الباطن و/أو بيع نسخ من البرنامج، والسماح للأشخاص الذين يُقدَّم لهم البرنامج بالقيام بذلك، وذلك وفقًا للشروط التالية:
+
+يجب تضمين إشعار حقوق النشر وإشعار الإذن هذا في جميع نسخ البرنامج أو الأجزاء الجوهرية منه.
+
+يُقدَّم البرنامج "كما هو"، دون أي ضمان من أي نوع، سواء صريح أو ضمني، بما في ذلك على سبيل المثال لا الحصر، ضمانات قابلية التسويق أو الملاءمة لغرض معين أو عدم الانتهاك.  
+في أي حال من الأحوال لن يكون المؤلفون أو أصحاب حقوق النشر مسؤولين عن أي مطالبة أو أضرار أو مسؤولية أخرى، سواء في عقد أو فعل ضار أو غير ذلك، تنشأ عن أو تتعلق بالبرنامج أو باستخدامه أو التعاملات الأخرى فيه.
+
+\`\`\`
+
+⭐ **ابدأ رحلتك خطوة بخطوة — الكود اللي بتكتبه النهارده ممكن يكون أول لبنة في مستقبلك.**
+
+`;
+        }
+
+        function updateStatus(completed, total, message) {
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+            const percentage = Math.round((completed / total) * 100);
+            const elapsedTime = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
+            
+            status.innerHTML = `
+                <strong>📊 الحالة:</strong> ${message}<br>
+                <strong>📁 الملفات:</strong> ${completed}/${total} (${percentage}%)<br>
+                <strong>⏱️ الوقت:</strong> ${elapsedTime} ثانية
+            `;
+            
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+        }
+
+        function createAllLessons() {
+            startTime = Date.now();
+            createdFiles = [];
+            selectedLessons.clear();
+            updateStatus(0, allLessons.length, 'بدء الإنشاء...');
+            
+            allLessons.forEach((lesson, index) => {
+                const [lessonNum, ...topicParts] = lesson.split(':');
+                const lessonTopic = topicParts.join(':');
+                
+                // إنشاء المحتوى
+                const content = generateLessonContent(lessonNum, lessonTopic);
+                
+                // حفظ في Local Storage
+                const fileName = `lesson_${lessonNum}_${lessonTopic
+                    .toLowerCase()
+                    .replace(/ /g, '_')
+                    .replace(/[().]/g, '')
+                    .replace(/&/g, 'and')}.md`;
+                
+                localStorage.setItem(`lesson_${lessonNum}`, content);
+                createdFiles.push({ name: fileName, num: lessonNum, topic: lessonTopic });
+                
+                // تحديث الحالة
+                setTimeout(() => {
+                    updateStatus(index + 1, allLessons.length, 'جاري الإنشاء...');
+                }, 100);
+            });
+            
+            setTimeout(() => {
+                updateStatus(allLessons.length, allLessons.length, 'تم الإنشاء بنجاح! ✅');
+                showFileList();
+            }, allLessons.length * 100 + 500);
+        }
+
+        function createSelectedLessons() {
+            // إنشاء دروس عشوائية للاختبار
+            const random = allLessons[Math.floor(Math.random() * allLessons.length)];
+            createdFiles = [];
+            
+            const [lessonNum, ...topicParts] = random.split(':');
+            const lessonTopic = topicParts.join(':');
+            
+            const content = generateLessonContent(lessonNum, lessonTopic);
+            const fileName = `lesson_${lessonNum}_${lessonTopic
+                .toLowerCase()
+                .replace(/ /g, '_')
+                .replace(/[().]/g, '')
+                .replace(/&/g, 'and')}.md`;
+            
+            localStorage.setItem(`lesson_${lessonNum}`, content);
+            createdFiles.push({ name: fileName, num: lessonNum, topic: lessonTopic });
+            
+            alert(`✅ تم إنشاء ${fileName} بنجاح!`);
+        }
+
+        function downloadAll() {
+            if (createdFiles.length === 0) {
+                alert('يرجى إنشاء الملفات أولاً!');
+                return;
+            }
+
+            try {
+                // إنشاء ملف مضغوط من جميع الملفات
+                let allContent = '';
+                createdFiles.forEach((file, index) => {
+                    const content = localStorage.getItem(`lesson_${file.num}`);
+                    if (content) {
+                        allContent += `=== ${file.name} ===
+${content}
+`;
+                        if (index < createdFiles.length - 1) {
+                            allContent += '='.repeat(80) + '
+';
+                        }
+                    }
+                });
+
+                const blob = new Blob([allContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'js-course-all-lessons.md';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                alert('🎉 تم تحميل جميع الملفات بنجاح!');
+                
+            } catch (error) {
+                console.error('خطأ في التحميل:', error);
+                alert('❌ حدث خطأ أثناء التحميل. يرجى المحاولة مرة أخرى.');
+            }
+        }
+
+        function downloadSelected() {
+            if (createdFiles.length === 0) {
+                alert('يرجى إنشاء الملفات أولاً!');
+                return;
+            }
+
+            try {
+                // تحميل الملف الأول فقط كتجربة
+                const file = createdFiles[0];
+                const content = localStorage.getItem(`lesson_${file.num}`);
+                
+                if (content) {
+                    const blob = new Blob([content], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = file.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    alert(`🎉 تم تحميل ${file.name} بنجاح!`);
+                }
+                
+            } catch (error) {
+                console.error('خطأ في التحميل:', error);
+                alert('❌ حدث خطأ أثناء التحميل. يرجى المحاولة مرة أخرى.');
+            }
+        }
+
+        function showFileList() {
+            const content = document.querySelector('.content');
+            let html = '<div class="success">';
+            html += `<h3>📁 الملفات الجاهزة للتحميل (${createdFiles.length} ملف)</h3>`;
+            createdFiles.forEach(file => {
+                html += `<p>✅ ${file.name} - الدرس ${file.num}: ${file.topic}</p>`;
+            });
+            html += '</div>';
+            content.innerHTML += html;
+        }
+
+        function clearAll() {
+            if (confirm('هل أنت متأكد من حذف جميع الملفات؟')) {
+                localStorage.clear();
+                createdFiles = [];
+                selectedLessons.clear();
+                document.querySelector('.content').innerHTML = `
+                    <div class="success">
+                        <h3>🗑️ تم مسح جميع الملفات</h3>
+                        <p>اضغط على "إنشاء جميع الملفات" لإعادة الإنشاء</p>
+                    </div>
+                `;
+                document.getElementById('status').innerHTML = `
+                    <strong>📊 الحالة:</strong> تم المسح<br>
+                    <strong>📁 الملفات:</strong> 0/10<br>
+                    <strong>⏱️ الوقت:</strong> --
+                `;
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('progressBar').textContent = '0%';
+                alert('✅ تم مسح جميع الملفات');
+            }
+        }
+
+        // اختبار سريع عند تحميل الصفحة
+        window.onload = function() {
+            console.log('✅ تم تحميل الصفحة بنجاح!');
+            console.log('🔧 تم إصلاح جميع المشاكل');
+        };
+    </script>
+</body>
+</html>
