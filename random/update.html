@@ -1,991 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🎯 منشئ ملفات دورة JavaScript - الإصدار المتقدم</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 20px;
-        direction: rtl;
-      }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-      }
-
-      .header {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        color: white;
-        padding: 30px;
-        text-align: center;
-      }
-
-      .header h1 {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-      }
-
-      .header p {
-        font-size: 1.2em;
-        opacity: 0.9;
-      }
-
-      .controls {
-        padding: 30px;
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        background: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-      }
-
-      .btn {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        color: white;
-        border: none;
-        padding: 15px 30px;
-        font-size: 16px;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-        font-weight: 600;
-      }
-
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-
-      .btn-secondary {
-        background: linear-gradient(45deg, #6c757d, #495057);
-      }
-
-      .btn-success {
-        background: linear-gradient(45deg, #28a745, #20c997);
-      }
-
-      .btn-warning {
-        background: linear-gradient(45deg, #ffc107, #fd7e14);
-      }
-
-      .btn-danger {
-        background: linear-gradient(45deg, #dc3545, #e83e8c);
-      }
-
-      .status {
-        padding: 20px 30px;
-        background: #f8f9fa;
-        font-family: "Courier New", monospace;
-        direction: ltr;
-        border-bottom: 1px solid #dee2e6;
-      }
-
-      .progress {
-        background: #e9ecef;
-        border-radius: 10px;
-        padding: 5px;
-        margin: 10px 0;
-        overflow: hidden;
-      }
-
-      .progress-bar {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        height: 20px;
-        border-radius: 5px;
-        transition: width 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-      }
-
-      .content {
-        padding: 30px;
-        max-height: 600px;
-        overflow-y: auto;
-      }
-
-      .lesson-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-      }
-
-      .lesson-card {
-        background: #f8f9fa;
-        border-radius: 15px;
-        padding: 20px;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
-      }
-
-      .lesson-card:hover {
-        border-color: #667eea;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      .lesson-card h3 {
-        color: #667eea;
-        margin-bottom: 10px;
-        font-size: 1.1em;
-      }
-
-      .lesson-card p {
-        color: #6c757d;
-        margin-bottom: 15px;
-        line-height: 1.5;
-      }
-
-      .lesson-meta {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
-        flex-wrap: wrap;
-      }
-
-      .meta-tag {
-        background: #e9ecef;
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 0.8em;
-        color: #495057;
-      }
-
-      .success {
-        background: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
-        padding: 15px;
-        border-radius: 5px;
-        margin: 10px 0;
-      }
-
-      .error {
-        background: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
-        padding: 15px;
-        border-radius: 5px;
-        margin: 10px 0;
-      }
-
-      .download-section {
-        margin-top: 20px;
-        padding: 20px;
-        background: #e3f2fd;
-        border-radius: 10px;
-        border: 1px solid #90caf9;
-      }
-
-      .file-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        margin: 5px 0;
-        background: white;
-        border-radius: 8px;
-        border: 1px solid #dee2e6;
-      }
-
-      .file-name {
-        font-weight: 600;
-        color: #495057;
-      }
-
-      .file-size {
-        color: #6c757d;
-        font-size: 0.9em;
-      }
-
-      @media (max-width: 768px) {
-        .controls {
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .btn {
-          width: 100%;
-          max-width: 300px;
-        }
-
-        .lesson-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>🎯 منشئ ملفات دورة JavaScript المتقدم</h1>
-        <p>إنشاء 188 ملف درس مع محتوى تفصيلي وتحميل منفصل</p>
-      </div>
-
-      <div class="controls">
-        <button class="btn" onclick="createAllLessons()">
-          🚀 إنشاء جميع الملفات
-        </button>
-        <button class="btn btn-secondary" onclick="createSelectedLessons()">
-          ⚡ إنشاء دروس محددة
-        </button>
-        <button class="btn btn-success" onclick="downloadAll()">
-          📦 تحميل الكل
-        </button>
-        <button class="btn btn-warning" onclick="downloadSelected()">
-          💾 تحميل المحدد
-        </button>
-        <button class="btn btn-danger" onclick="clearAll()">🗑️ مسح الكل</button>
-      </div>
-
-      <div id="status" class="status">
-        <strong>📊 الحالة:</strong> جاهز للإنشاء...<br />
-        <strong>📁 الملفات:</strong> 0/188<br />
-        <strong>⏱️ الوقت:</strong> --
-      </div>
-
-      <div class="progress">
-        <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
-      </div>
-
-      <div class="content">
-        <div id="lessonGrid" class="lesson-grid">
-          <div class="lesson-card">
-            <h3>🎯 مرحباً بك!</h3>
-            <p>
-              اضغط على "إنشاء جميع الملفات" لبدء إنشاء ملفات الدروس مع المحتوى
-              التفصيلي والتاسكات.
-            </p>
-            <div class="lesson-meta">
-              <span class="meta-tag">📚 188 درس</span>
-              <span class="meta-tag">🎯 تاسكات</span>
-              <span class="meta-tag">📖 محتوى</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-              // قائمة الدروس مع المحتوى التفصيلي
-              const detailedLessons = {
-                  "1": {
-                      title: "Introduction And What Is JavaScript",
-                      description: "مقدمة شاملة عن JavaScript وأهميته في تطوير الويب",
-                      content: `
-      ### 🎯 أهداف التعلم:
-      - فهم ما هو JavaScript ولماذا هو مهم جداً في تطوير الويب
-      - معرفة الفرق بين JavaScript وHTML وCSS ودور كل واحد منهم
-      - استكشاف إمكانيات JavaScript في إنشاء مواقع تفاعلية
-      - فهم كيفية استخدام JavaScript في الحياة العملية
-
-      ### 📝 الملاحظات المهمة:
-      - JavaScript هو أساس التفاعلية في الويب الحديث
-      - يعمل مع HTML وCSS ليصبح مطور ويب كامل
-      - يمكن استخدام JavaScript في الخادم (Node.js) أيضاً
-      - هو من أكثر لغات البرمجة استخداماً في العالم
-
-      ### 💡 أمثلة عملية:
-      - نافذة منبثقة (Popup)
-      - نماذج تفاعلية (Interactive Forms)
-      - ألعاب بسيطة (Simple Games)
-      - تحديث المحتوى بدون إعادة تحميل الصفحة
-                      `
-                  },
-                  "2": {
-                      title: "How To Study The Course",
-                      description: "استراتيجيات وطرق فعالة لدراسة الدورة والاستفادة القصوى",
-                      content: `
-      ### 🎯 أهداف التعلم:
-      - وضع خطة دراسية منظمة ومفصلة
-      - تحديد الأهداف الشخصية للتعلم
-      - اكتشاف أفضل طرق التعلم المناسبة لك
-      - بناء عادات دراسية فعالة
-
-      ### 📝 استراتيجيات التعلم:
-      - **التطبيق العملي:** طبق ما تتعلمه فوراً
-      - **الممارسة المستمرة:** تدرب يومياً ولو 30 دقيقة
-      - **البحث الذاتي:** ابحث في المصادر الإضافية
-      - **المشاركة:** اشرح ما تعلمته للآخرين
-
-      ### 📚 المصادر المفيدة:
-      - MDN Web Docs
-      - W3Schools
-      - JavaScript.info
-      - Stack Overflow
-      - YouTube Channels
-                      `
-                  },
-                  "3": {
-                      title: "Setting up environment and tools",
-                      description: "إعداد بيئة التطوير وتثبيت الأدوات اللازمة للبرمجة",
-                      content: `
-      ### 🎯 أدوات التطوير المطلوبة:
-      - **Visual Studio Code:** المحرر الأفضل للـ JavaScript
-      - **Google Chrome:** المتصفح مع أدوات المطور
-      - **Node.js:**运行环境 للـ JavaScript
-      - **Git:** نظام التحكم في النسخ
-
-      ### 🔌 إضافات VS Code المهمة:
-      - **Live Server:** لتشغيل الخادم المحلي
-      - **Prettier:** لتنسيق الكود
-      - **ESLint:** لفحص جودة الكود
-      - **Bracket Pair Colorizer:** لتمييز الأقواس
-      - **Auto Rename Tag:** لإعادة تسمية العلامات تلقائياً
-
-      ### 🧪 اختبار البيئة:
-      - إنشاء ملف HTML بسيط
-      - ربط ملف JavaScript
-      - اختبار الكود في المتصفح
-                      `
-                  },
-                  "4": {
-                      title: "Work with chrome developer tools",
-                      description: "استخدام أدوات مطور Chrome لفحص وتصحيح الكود",
-                      content: `
-      ### 🔍 أقسام أدوات المطور:
-      - **Elements:** فحص وتحرير HTML وCSS
-      - **Console:** تشغيل أوامر JavaScript
-      - **Network:** مراقبة طلبات الشبكة
-      - **Sources:** فحص ملفات المشروع
-      - **Application:** إدارة التخزين والـ Cookies
-
-      ### ⚙️ استخدام Console:
-      - console.log() للطباعة
-      - console.error() للأخطاء
-      - console.warn() للتحذيرات
-      - console.table() لعرض البيانات
-
-      ### 🐛 تصحيح الأخطاء:
-      - استخدام breakpoints
-      - فحص المتغيرات
-      - تتبع تنفيذ الكود
-      - مراقبة الأداء
-                      `
-                  },
-                  "5": {
-                      title: "Where to put the code",
-                      description: "أفضل مواقع وضع كود JavaScript في صفحة الويب",
-                      content: `
-      ### 📍 مواقع الكود:
-      - **داخل وسم <head>:** للسكريبتات التي تحتاج تحميل مبكر
-      - **داخل وسم <body>:** الأكثر شيوعاً
-      - **قبل </body>:** أفضل ممارسة للأداء
-      - **ملف خارجي منفصل:** للمشاريع الكبيرة
-
-      ### ⚡ تأثير الأداء:
-      - تحميل الصفحة يتوقف على الـ JavaScript
-      - السكريبتات تؤثر على سرعة العرض
-      - التحميل التدريجي يحسن الأداء
-      - استخدام defer و async
-
-      ### 🎯 أفضل الممارسات:
-      - وضع الكود قبل إغلاق </body>
-      - استخدام window.onload للأداء المبكر
-      - تحميل السكريبتات غير المتزامنة
-                      `
-                  }
-              };
-
-              // باقي الدروس (سأضيف أول 20 درس كمثال)
-              const allLessons = [
-                  "1:Introduction And What Is JavaScript",
-                  "2:How To Study The Course",
-                  "3:Setting up environment and tools",
-                  "4:Work with chrome developer tools",
-                  "5:Where to put the code",
-                  "6:Comments and bad practice",
-                  "7:Output to screen",
-                  "8:Console methods and styling and web API",
-                  "9:What is ECMAScript",
-                  "10:Data type and typeof operator",
-                  "11:Variable introduction",
-                  "12:Identifiers name convention & rules",
-                  "13:Var, Let, Const compare",
-                  "14:String syntax & Escape",
-                  "15:Concatenation",
-                  "16:Template Literals (Template Strings)",
-                  "17:Variables & Concatenation challenge",
-                  "18:Arithmetic operators",
-                  "19:Unary plus and negation operators",
-                  "20:Type coercion"
-                  // باقي الدروس...
-              ];
-
-              let createdFiles = [];
-              let selectedLessons = new Set();
-              let startTime;
-
-              function getDetailedContent(lessonNum, lessonTopic) {
-                  const detailed = detailedLessons[lessonNum];
-                  if (detailed) {
-                      return `
-      ### 📋 تفاصيل الدرس:
-      ${detailed.content}
-
-      ### 🎯 ما ستتعلمه:
-      - المفاهيم الأساسية للـ ${detailed.title}
-      - أمثلة عملية وتطبيقات واقعية
-      - نصائح وحيل للمطورين المتقدمين
-      - أفضل الممارسات في البرمجة
-                      `;
-                  }
-
-                  // محتوى عام للدروس الأخرى
-                  return `
-      ### 📋 محتوى الدرس:
-      في هذا الدرس ستتعلم مفاهيم متقدمة في ${lessonTopic} مع التركيز على التطبيق العملي والأمثلة الحية.
-
-      ### 🎯 النقاط الرئيسية:
-      - شرح تفصيلي للمفهوم
-      - أمثلة عملية وتطبيقات
-      - أفضل الممارسات في البرمجة
-      - نصائح وحيل مفيدة
-      - تمارين تطبيقية متنوعة
-                  `;
-              }
-
-              function getAssignmentsForTopic(lessonTopic) {
-                  const specialAssignments = {
-                      'Introduction': `
-      ### 📚 التاسكات الخاصة:
-      - **📖 دراسة تاريخية:** ابحث في تاريخ JavaScript وتطوره
-      - **🎯 وضع الأهداف:** اكتب 5 أهداف محددة للتعلم
-      - **🔍 مقارنة اللغات:** قارن JavaScript مع لغات البرمجة الأخرى
-      - **💡 مشروع مبدئي:** أنشئ صفحة HTML بسيطة مع JavaScript
-                      `,
-                      'environment': `
-      ### ⚙️ التاسكات العملية:
-      - **🔧 تثبيت الأدوات:** ثبت VS Code وجميع الإضافات
-      - **🧪 اختبار البيئة:** أنشئ أول مشروع كامل
-      - **📊 قياس الأداء:** اختبر سرعة تشغيل الأكواد
-      - **🎨 تخصيص المحرر:** اضبط إعدادات VS Code حسب تفضيلك
-                      `,
-                      'DOM': `
-      ### 🎨 التاسكات التفاعلية:
-      - **📝 إنشاء عناصر:** أنشئ 10 عناصر HTML مختلفة برمجياً
-      - **🎪 إدارة الأحداث:** ضع 5 أحداث مختلفة على عناصر الصفحة
-      - **🎨 التلاعب بالتصميم:** غير ألوان وأحجام العناصر ديناميكياً
-      - **📱 صفحة تفاعلية:** أنشئ صفحة ويب كاملة بتفاعل JavaScript
-                      `,
-                      'Function': `
-      ### ⚙️ التاسكات البرمجية:
-      - **🔧 إنشاء دوال:** اكتب 10 دوال مختلفة (بسيطة ومعقدة)
-      - **🔄 تحويل الصيغ:** حول الدوال العادية إلى Arrow Functions
-      - **🎯 المعاملات المتقدمة:** جرب Rest وDefault والـ Destructuring
-      - **💡 دوال إبداعية:** أنشئ دوال لألعاب بسيطة أو حاسبات
-                      `,
-                      'Array': `
-      ### 📊 التاسكات على البيانات:
-      - **🔍 عمليات البحث:** طبق 5 عمليات بحث مختلفة في المصفوفات
-      - **🔄 الترتيب والتصفية:** رتب وصفي البيانات بطرق مختلفة
-      - **📈 الإحصائيات:** احسب متوسط ومجموع وأكبر وأصغر قيمة
-      - **🎯 تطبيق حقيقي:** أنشئ نظام إدارة منتجات بالمصفوفات
-                      `
-                  };
-
-                  for (const [key, value] of Object.entries(specialAssignments)) {
-                      if (lessonTopic.toLowerCase().includes(key.toLowerCase())) {
-                          return value;
-                      }
-                  }
-
-                  return `
-      ### 🎨 التاسكات الإبداعية:
-      - **🔧 تطبيق عملي:** طبق المفهوم في مشروع حقيقي
-      - **🧪 تجربة مبدعة:** أنشئ مثال جديد من خيالك
-      - **💡 مشاركة المعرفة:** اشرح الدرس لشخص غير مبرمج
-      - **🚀 تحدي متقدم:** ابحث عن استخدامات متقدمة للمفهوم
-                  `;
-              }
-
-              function generateLessonContent(lessonNum, lessonTopic) {
-                  const detailed = getDetailedContent(lessonNum, lessonTopic);
-                  const assignments = getAssignmentsForTopic(lessonTopic);
-
-                  return `# 📚 الدرس رقم ${lessonNum}: ${lessonTopic}
-
-      ---
-
-      ## ⏱️ معلومات الدرس
-      - **رقم الدرس:** ${lessonNum}
-      - **الموضوع:** ${lessonTopic}
-      - **المستوى:** مبتدئ إلى متقدم
-      - **المدة المقترحة:** 45-60 دقيقة
-      - **الأولوية:** ${getPriority(lessonNum)}
-
-      ---
-
-      ## 📖 محتوى الدرس التفصيلي
-
-      ${detailed}
-
-      ---
-
-      ## 💻 أمثلة عملية
-
-      ### 🎯 مثال أساسي:
-      \`\`\`javascript
-      // مثال بسيط لتطبيق مفهوم الدرس
-      function example() {
-          console.log('مرحباً من الدرس ${lessonNum}');
-          return 'مثال ناجح!';
-      }
-      \`\`\`
-
-      ### 🚀 مثال متقدم:
-      \`\`\`javascript
-      // تطبيق متقدم للمفهوم
-      class AdvancedExample {
-          constructor() {
-              this.data = [];
-          }
-
-          process() {
-              return this.data.map(item => {
-                  // معالجة متقدمة
-                  return item;
-              });
-          }
-      }
-      \`\`\`
-
-      ---
-
-      ## 📝 التاسكات والتمارين
-
-      ### 🎯 التاسكات الأساسية:
-      1. **📄 مراجعة الدرس:** راجع النقاط الرئيسية
-      2. **💻 تطبيق عملي:** طبق المفهوم في مثال بسيط
-      3. **🔍 بحث إضافي:** ابحث عن مثال أو مرجع إضافي
-      4. **📚 قراءة مراجع:** اقرأ المصادر الإضافية
-      5. **🎯 تطبيق على مشروع:** طبق المفهوم في مشروع حقيقي
-
-      ### 🎨 التاسكات المتقدمة:
-      ${assignments}
-
-      ### 🏆 التحديات الأسبوعية:
-      - **تحدي اليوم:** طبق 3 أمثلة من الدرس
-      - **تحدي الأسبوع:** أنشئ مشروع صغير باستخدام مفاهيم الدرس
-      - **تحدي الشهر:** شارك مشروعك مع المجتمع
-
-      ### 🏆 التقييم الذاتي:
-      - [ ] فهمت المفهوم الأساسي بوضوح
-      - [ ] تمكنت من تطبيقه عملياً
-      - [ ] حللت التاسكات بدون مساعدة
-      - [ ] استطعت شرحه لشخص آخر
-      - [ ] طبقت المفهوم في مشروع شخصي
-      - [ ] اكتشفت استخدامات متقدمة للمفهوم
-
-      ---
-
-      ## 📚 مصادر إضافية
-
-      ### 🔗 روابط مفيدة:
-      - **MDN Web Docs:** [رابط](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-      - **JavaScript.info:** [رابط](https://javascript.info/)
-      - **W3Schools:** [رابط](https://www.w3schools.com/js/)
-
-      ### 📖 كتب موصى بها:
-      - **Eloquent JavaScript** (مجاني)
-      - **You Don't Know JS** (مجاني)
-      - **JavaScript: The Good Parts**
-
-      ### 🎥 قنوات YouTube:
-      - **Coding With Mosh**
-      - **Academind**
-      - **Traversy Media**
-
-      ---
-
-      EOF_FOOTER
-
-      # 💡 About & Contact
-
-      أنا **مصطفى عبد النعيم** — مؤسس **Code Journey**.
-      أعمل على **تمكين الشباب من دخول عالم البرمجة بخطوات عملية وواضحة**، من خلال محتوى، تدريب، وتوجيه مبني على التجربة الفعلية.
-
-      ### 📬 تقدر تتواصل معايا شخصيًا:
-      - 💬 واتساب: [اضغط هنا](https://wa.me/201114938410)
-      - 📧 الإيميل: [mnaeam10@gmail.com](mailto:mnaeam10@gmail.com)
-      - 🌐 [الموقع الرسمي](https://mostafa-naeam.vercel.app/)
-      - 💼 [LinkedIn](https://www.linkedin.com/in/mostafa-naeam/)
-
-      ## 💬 تواصل معنا
-      - 💬 واتساب: [اضغط هنا](https://wa.me/201555303227)
-      - 📩 البريد الرسمي: [codejourney02@gmail.com](mailto:codejourney02@gmail.com)
-      - 💼 [LinkedIn – Code Journey](https://www.linkedin.com/company/code-journey25/)
-      - 🌐 [Website – mostafa-naeam](https://mostafa-naeam.vercel.app/)
-
-      ---
-
-      ## ⚖️ License | الترخيص
-
-      ### MIT License (English)
-
-      \`\`\`License
-      MIT License
-
-      Copyright (c) 2025 Mostafa Abd El-naeam
-
-      Permission is hereby granted, free of charge, to any person obtaining a copy
-      of this software and associated documentation files (the "Software"), to deal
-      in the Software without restriction, including without limitation the rights
-      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-      copies of the Software, and to permit persons to whom the Software is
-      furnished to do so, subject to the following conditions:
-
-      The above copyright notice and this permission notice shall be included
-      in all copies or substantial portions of the Software.
-
-      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-      OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-      THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-      FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-      DEALINGS IN THE SOFTWARE.
-      \`\`\`
-
-      ### رخصة MIT (بالعربية)
-
-      \`\`\`License
-
-      يُمنح الإذن مجانًا لأي شخص يحصل على نسخة من هذا البرنامج والوثائق المرتبطة به ("البرنامج") بالتعامل في البرنامج دون أي قيود، بما في ذلك على سبيل المثال لا الحصر، حقوق الاستخدام والنسخ والتعديل والدمج والنشر والتوزيع والترخيص من الباطن و/أو بيع نسخ من البرنامج، والسماح للأشخاص الذين يُقدَّم لهم البرنامج بالقيام بذلك، وذلك وفقًا للشروط التالية:
-
-      يجب تضمين إشعار حقوق النشر وإشعار الإذن هذا في جميع نسخ البرنامج أو الأجزاء الجوهرية منه.
-
-      يُقدَّم البرنامج "كما هو"، دون أي ضمان من أي نوع، سواء صريح أو ضمني، بما في ذلك على سبيل المثال لا الحصر، ضمانات قابلية التسويق أو الملاءمة لغرض معين أو عدم الانتهاك.
-      في أي حال من الأحوال لن يكون المؤلفون أو أصحاب حقوق النشر مسؤولين عن أي مطالبة أو أضرار أو مسؤولية أخرى، سواء في عقد أو فعل ضار أو غير ذلك، تنشأ عن أو تتعلق بالبرنامج أو باستخدامه أو التعاملات الأخرى فيه.
-
-      \`\`\`
-
-      ⭐ **ابدأ رحلتك خطوة بخطوة — الكود اللي بتكتبه النهارده ممكن يكون أول لبنة في مستقبلك.**
-
-      EOF_LESSON
-                  `;
-              }
-
-              function getPriority(lessonNum) {
-                  const num = parseInt(lessonNum);
-                  if (num <= 10) return "🔴 حرج جداً";
-                  if (num <= 30) return "🟠 عالي";
-                  if (num <= 60) return "🟡 متوسط";
-                  if (num <= 100) return "🟢 عادي";
-                  return "🔵 للاطلاع";
-              }
-
-              function updateStatus(completed, total, message) {
-                  const status = document.getElementById('status');
-                  const progressBar = document.getElementById('progressBar');
-                  const percentage = Math.round((completed / total) * 100);
-                  const elapsedTime = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
-
-                  status.innerHTML = `
-                      <strong>📊 الحالة:</strong> ${message}<br>
-                      <strong>📁 الملفات:</strong> ${completed}/${total} (${percentage}%)<br>
-                      <strong>⏱️ الوقت:</strong> ${elapsedTime} ثانية
-                  `;
-
-                  progressBar.style.width = percentage + '%';
-                  progressBar.textContent = percentage + '%';
-              }
-
-              function addLessonCard(lessonNum, lessonTopic) {
-                  const grid = document.getElementById('lessonGrid');
-                  const card = document.createElement('div');
-                  card.className = 'lesson-card';
-                  card.innerHTML = `
-                      <h3>📚 ${lessonTopic}</h3>
-                      <p>الدرس ${lessonNum} من الدورة - ${getPriority(lessonNum)}</p>
-                      <div class="lesson-meta">
-                          <span class="meta-tag">📖 محتوى مفصل</span>
-                          <span class="meta-tag">📝 تاسكات</span>
-                          <span class="meta-tag">💻 أمثلة</span>
-                      </div>
-                      <div style="margin-top: 15px;">
-                          <input type="checkbox" id="select-${lessonNum}" onchange="toggleSelection(${lessonNum})" style="margin-left: 10px;">
-                          <label for="select-${lessonNum}">تحديد للاختيار</label>
-                      </div>
-                  `;
-                  grid.appendChild(card);
-              }
-
-              function toggleSelection(lessonNum) {
-                  const checkbox = document.getElementById(`select-${lessonNum}`);
-                  if (checkbox.checked) {
-                      selectedLessons.add(lessonNum);
-                  } else {
-                      selectedLessons.delete(lessonNum);
-                  }
-              }
-
-              function createAllLessons() {
-                  startTime = Date.now();
-                  createdFiles = [];
-                  selectedLessons.clear();
-                  document.getElementById('lessonGrid').innerHTML = '';
-                  updateStatus(0, allLessons.length, 'بدء الإنشاء...');
-
-                  allLessons.forEach((lesson, index) => {
-                      const [lessonNum, ...topicParts] = lesson.split(':');
-                      const lessonTopic = topicParts.join(':');
-
-                      // إضافة البطاقة
-                      addLessonCard(lessonNum, lessonTopic);
-
-                      // إنشاء المحتوى
-                      const content = generateLessonContent(lessonNum, lessonTopic);
-
-                      // حفظ في Local Storage
-                      const fileName = `lesson_${lessonNum}_${lessonTopic
-                          .toLowerCase()
-                          .replace(/ /g, '_')
-                          .replace(/[().]/g, '')
-                          .replace(/&/g, 'and')}.md`;
-
-                      localStorage.setItem(`lesson_${lessonNum}`, content);
-                      createdFiles.push({ name: fileName, num: lessonNum, topic: lessonTopic });
-
-                      // تحديث الحالة
-                      setTimeout(() => {
-                          updateStatus(index + 1, allLessons.length, 'جاري الإنشاء...');
-                      }, 100);
-                  });
-
-                  setTimeout(() => {
-                      updateStatus(allLessons.length, allLessons.length, 'تم الإنشاء بنجاح! ✅');
-                      displayFileList();
-                  }, allLessons.length * 100 + 500);
-              }
-
-              function createSelectedLessons() {
-                  if (selectedLessons.size === 0) {
-                      alert('يرجى تحديد الدروس أولاً!');
-                      return;
-                  }
-
-                  startTime = Date.now();
-                  createdFiles = [];
-                  document.getElementById('lessonGrid').innerHTML = '';
-                  const selected = allLessons.filter(lesson => {
-                      const lessonNum = lesson.split(':')[0];
-                      return selectedLessons.has(lessonNum);
-                  });
-
-                  updateStatus(0, selected.length, 'إنشاء الدروس المحددة...');
-
-                  selected.forEach((lesson, index) => {
-                      const [lessonNum, ...topicParts] = lesson.split(':');
-                      const lessonTopic = topicParts.join(':');
-
-                      addLessonCard(lessonNum, lessonTopic);
-
-                      const content = generateLessonContent(lessonNum, lessonTopic);
-                      const fileName = `lesson_${lessonNum}_${lessonTopic
-                          .toLowerCase()
-                          .replace(/ /g, '_')
-                          .replace(/[().]/g, '')
-                          .replace(/&/g, 'and')}.md`;
-
-                      localStorage.setItem(`lesson_${lessonNum}`, content);
-                      createdFiles.push({ name: fileName, num: lessonNum, topic: lessonTopic });
-
-                      setTimeout(() => {
-                          updateStatus(index + 1, selected.length, 'جاري الإنشاء...');
-                      }, 100);
-                  });
-
-                  setTimeout(() => {
-                      updateStatus(selected.length, selected.length, 'تم الإنشاء بنجاح! ✅');
-                      displayFileList();
-                  }, selected.length * 100 + 500);
-              }
-
-              function displayFileList() {
-                  const grid = document.getElementById('lessonGrid');
-                  const downloadSection = document.createElement('div');
-                  downloadSection.className = 'download-section';
-
-                  let html = `
-                      <h3>📁 الملفات الجاهزة للتحميل (${createdFiles.length} ملف)</h3>
-                      <div style="max-height: 400px; overflow-y: auto; margin-top: 15px;">
-                  `;
-
-                  createdFiles.forEach(file => {
-                      const content = localStorage.getItem(`lesson_${file.num}`);
-                      const size = new Blob([content]).size;
-                      const sizeKB = Math.round(size / 1024);
-
-                      html += `
-                          <div class="file-item">
-                              <div>
-                                  <div class="file-name">${file.name}</div>
-                                  <div class="file-size">الدرس ${file.num}: ${file.topic} (${sizeKB} KB)</div>
-                              </div>
-                              <button class="btn" onclick="downloadSingle('${file.num}', '${file.name}')" style="padding: 8px 16px; font-size: 14px;">
-                                  📥 تحميل
-                              </button>
-                          </div>
-                      `;
-                  });
-
-                  html += '</div>';
-                  downloadSection.innerHTML = html;
-                  grid.appendChild(downloadSection);
-              }
-
-              function downloadSingle(lessonNum, fileName) {
-                  const content = localStorage.getItem(`lesson_${lessonNum}`);
-                  const blob = new Blob([content], { type: 'text/plain' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = fileName;
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
-
-                  // إشعار للمستخدم
-                  const notification = document.createElement('div');
-                  notification.className = 'success';
-                  notification.textContent = `✅ تم تحميل ${fileName} بنجاح!`;
-                  document.body.appendChild(notification);
-
-                  setTimeout(() => {
-                      notification.remove();
-                  }, 3000);
-              }
-
-              function downloadAll() {
-                  if (createdFiles.length === 0) {
-                      alert('يرجى إنشاء الملفات أولاً!');
-                      return;
-                  }
-
-                  // إنشاء ملف مضغوط من جميع الملفات
-                  let allContent = '';
-                  createdFiles.forEach((file, index) => {
-                      const content = localStorage.getItem(`lesson_${file.num}`);
-                      allContent += `=== ${file.name} ===
-      ${content}
-      `;
-                      if (index < createdFiles.length - 1) {
-                          allContent += '\n      ' + '='.repeat(80) + '\n      ';
-                      }
-                  });
-
-                  const blob = new Blob([allContent], { type: 'text/plain' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = 'js-course-all-lessons.md';
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
-
-                  alert('🎉 تم تحميل جميع الملفات بنجاح!');
-              }
-
-              function downloadSelected() {
-                  if (selectedLessons.size === 0) {
-                      alert('يرجى تحديد الدروس أولاً!');
-                      return;
-                  }
-
-                  let allContent = '';
-                  const selected = createdFiles.filter(file => selectedLessons.has(file.num));
-
-                  selected.forEach((file, index) => {
-                      const content = localStorage.getItem(`lesson_${file.num}`);
-                      allContent += `=== ${file.name} ===
-       ${content}
-      `;
-                      if (index < selected.length - 1) {
-                          allContent += ' ' + '='.repeat(80) + '\n      ';
-                      }
-                  });
-
-                  const blob = new Blob([allContent], { type: 'text/plain' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = 'js-course-selected-lessons.md';
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
-
-                  alert('🎉 تم تحميل الملفات المحددة بنجاح!');
-              }
-
-              function clearAll() {
-                  if (confirm('هل أنت متأكد من حذف جميع الملفات؟')) {
-                      localStorage.clear();
-                      createdFiles = [];
-                      selectedLessons.clear();
-                      document.getElementById('lessonGrid').innerHTML = `
-                          <div class="lesson-card">
-                              <h3>🗑️ تم مسح جميع الملفات</h3>
-                              <p>اضغط على "إنشاء جميع الملفات" لإعادة الإنشاء</p>
-                          </div>
-                      `;
-                      document.getElementById('status').innerHTML = `
-                          <strong>📊 الحالة:</strong> تم المسح<br>
-                          <strong>📁 الملفات:</strong> 0/188<br>
-                          <strong>⏱️ الوقت:</strong> --
-                      `;
-                      document.getElementById('progressBar').style.width = '0%';
-                      document.getElementById('progressBar').textContent = '0%';
-                      alert('✅ تم مسح جميع الملفات');
-                  }
-              }
-
-              // إشعار ترحيبي
-              window.onload = function() {
-                  const notification = document.createElement('div');
-                  notification.className = 'success';
-                  notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 300px;';
-                  notification.innerHTML = `
-                      <strong>🎉 مرحباً بك!</strong><br>
-                      هذا الإصدار المتقدم يتيح لك:
-                      <ul style="margin: 10px 0; text-align: left;">
-                          <li>محتوى تفصيلي لكل درس</li>
-                          <li>تحميل ملف لكل درس منفصل</li>
-                          <li>تاسكات متقدمة ومخصصة</li>
-                          <li>تحديد دروس معينة</li>
-                      </ul>
-                      <button onclick="this.parentElement.remove()" style="background: none; border: none; color: #155724; font-weight: bold; cursor: pointer;">إغلاق</button>
-                  `;
-                  document.body.appendChild(notification);
-
-                  setTimeout(() => {
-                      notification.remove();
-                  }, 8000);
-              };
-    </script>
-  </body>
-</html>
